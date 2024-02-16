@@ -13,7 +13,7 @@ class JSONRiderResult(JSONResult):
 class JSONRaceStats(TypedDict):
     data: list[JSONRiderResult]
 
-class RaceStats(JsonRequest):
+class RaceStatsRequest(JsonRequest):
 
     def __init__(self, zid: int):
         super().__init__("/results/{}_view.json".format(zid))
@@ -25,7 +25,7 @@ class RaceStats(JsonRequest):
         return super().get(params)
 
 if __name__ == "__main__":
-    rs = RaceStats(4152904)
+    rs = RaceStatsRequest(4152904)
     data = rs.get()
     print(data)
     print(rs.cacheDate())
