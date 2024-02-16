@@ -2,6 +2,8 @@ import requests
 import os.path
 import json
 
+from .common import cacheDir
+
 class BadResponse(Exception):
     pass
 
@@ -10,7 +12,7 @@ class NoCookie(Exception):
         return """
 ------------------------------------------------------------------------------------------------------------------
 File Cookie.txt not found
-Cookie.txt should contain the authentication cookie set by ZwiftPower and live in the root directory of this module
+Cookie.txt should contain the authentication cookie set by ZwiftPower and live in the ~/.zwiftpower directory
 To get the cookie, use a Browser to go to zwiftpower.com and use the debug pannel Ctrl-Shift-J, Network, Request Headers
 ------------------------------------------------------------------------------------------------------------------
 """
@@ -20,8 +22,8 @@ _cookie: str = None
 def getCookie():
     global _cookie
     if _cookie is None:
-        thisDir = os.path.dirname(__file__)
-        cookieFile = os.path.join(thisDir, "Cookie.txt")
+        userDir = cacheDir()
+        cookieFile = os.path.join(userDir, "Cookie.txt")
         try:
             with open(cookieFile) as fh:
                 _cookie = fh.read()
@@ -32,7 +34,6 @@ def getCookie():
 class JsonRequest:
 
     base_url = "https://zwiftpower.com/cache3"
-    _cacheDir = None
 
     def __init__(self, url):
         self.url = self.base_url + url
@@ -54,21 +55,15 @@ class JsonRequest:
             self.saveToCache(data)
         return data
     
-    def cacheDir(self):
-        if self._cacheDir is None:
-            home = os.path.expanduser("~")
-            self._cacheDir = os.path.join(home, ".zwiftpower")
-        return self._cacheDir
-    
     def cacheFile(self):
         if not hasattr(self, "_cacheFile"):
-            dir = self.cacheDir()
+            dir = cacheDir()
             filename = os.path.basename(self.url)
             self._cacheFile = os.path.join(dir, filename)
         return self._cacheFile
     
     def saveToCache(self, data):
-        dir = self.cacheDir()
+        dir = cacheDir()
         if not os.path.exists(dir):
             os.mkdir(dir)
         file = self.cacheFile()

@@ -1,13 +1,15 @@
 from .jsonrequest import JsonRequest
+from .common import cacheDir
 import os.path
 from typing import TypedDict
+
 
 class NoZwidFile(Exception):
     def __str__(self) -> str:
         return """
 ------------------------------------------------------------------------------------------------------------------
 File zwid.txt not found
-zwid.txt should contain the ZwiftPower id for the user and live in the root directory of this module
+zwid.txt should contain the ZwiftPower id for the user and live in the ~/.zwiftpower directory
 To get the zwid, vist zwiftpower.com in a browser and select "Profile". The zwid will be the z= param of the url
 ------------------------------------------------------------------------------------------------------------------
 """
@@ -17,8 +19,8 @@ _zwid: str = None
 def getZwid():
     global _zwid
     if _zwid is None:
-        thisDir = os.path.dirname(__file__)
-        zwidFile = os.path.join(thisDir, "zwid.txt")
+        userDir = cacheDir()
+        zwidFile = os.path.join(userDir, "zwid.txt")
         try:
             with open(zwidFile) as fh:
                 _zwid = fh.read()
@@ -139,7 +141,7 @@ class RiderStats(JsonRequest):
         return True 
 
 if __name__ == "__main__":
-    rs = RiderStats(timestamp=1707984600)
+    rs = RiderStats(timestamp=1708074526)
     data = rs.get()
     print(data["data"])
     print(rs.cacheDate())
