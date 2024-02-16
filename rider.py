@@ -1,5 +1,5 @@
 from .jsonrequest import JsonRequest
-from .common import cacheDir
+from .common import userDir
 import os.path
 from typing import TypedDict
 
@@ -19,8 +19,8 @@ _zwid: str = None
 def getZwid():
     global _zwid
     if _zwid is None:
-        userDir = cacheDir()
-        zwidFile = os.path.join(userDir, "zwid.txt")
+        dir = userDir()
+        zwidFile = os.path.join(dir, "zwid.txt")
         try:
             with open(zwidFile) as fh:
                 _zwid = fh.read()

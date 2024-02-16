@@ -2,7 +2,7 @@ import requests
 import os.path
 import json
 
-from .common import cacheDir
+from .common import userDir, cacheDir, makeCacheDir
 
 class BadResponse(Exception):
     pass
@@ -22,8 +22,8 @@ _cookie: str = None
 def getCookie():
     global _cookie
     if _cookie is None:
-        userDir = cacheDir()
-        cookieFile = os.path.join(userDir, "Cookie.txt")
+        dir = userDir()
+        cookieFile = os.path.join(dir, "Cookie.txt")
         try:
             with open(cookieFile) as fh:
                 _cookie = fh.read()
@@ -65,7 +65,7 @@ class JsonRequest:
     def saveToCache(self, data):
         dir = cacheDir()
         if not os.path.exists(dir):
-            os.mkdir(dir)
+            makeCacheDir()
         file = self.cacheFile()
         with open(file, "wb") as fh:
             fh.write(str.encode(json.dumps(data)))
