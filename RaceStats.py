@@ -99,7 +99,7 @@ class RaceStats:
         return qual + (pos - 1) * ppp
     
 if __name__ == "__main__":
-    stats = getRaceStats(4152904)
+    stats = getRaceStats(4152522)
     print("Categories: {}".format(stats.categories()))
     myCat = stats.myCategory()
     print("My Category: {}".format(myCat))

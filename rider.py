@@ -41,7 +41,7 @@ class JSONRaceResult(JSONResult):
 class JSONRiderStats(TypedDict):
     data: list[JSONRaceResult]
 
-class RiderStats(JsonRequest):
+class RiderStatsRequest(JsonRequest):
 
     def __init__(self, zwid=None, timestamp=None):
         if zwid is None:
@@ -65,7 +65,7 @@ class RiderStats(JsonRequest):
         return True 
 
 if __name__ == "__main__":
-    rs = RiderStats(timestamp=1708074526)
+    rs = RiderStatsRequest(timestamp=1708074526)
     data = rs.get()
     print(data["data"])
     print(rs.cacheDate())
