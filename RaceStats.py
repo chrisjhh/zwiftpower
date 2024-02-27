@@ -56,7 +56,7 @@ class RaceStats:
             top10 = finishers
         else: 
             top10 = finishers[0:10]
-        scores = [float(x["skill_b"]) for x in top10]
+        scores = [float(x["skill_b"]) for x in top10 if float(x["skill_b"]) != 0.0]
         scores.sort()
         if len(scores) < 5:
             return 0
@@ -70,7 +70,7 @@ class RaceStats:
             finishers = self.data
         else:
             finishers = [x for x in self.data if x["category"] == cat]
-        scores = [float(x["skill_b"]) for x in finishers]
+        scores = [float(x["skill_b"]) for x in finishers if float(x["skill_b"]) != 0.0]
         return sum(scores) / len(scores)
     
     def pointsPerPlace(self, cat=None):
@@ -99,7 +99,16 @@ class RaceStats:
         return qual + (pos - 1) * ppp
     
 if __name__ == "__main__":
-    stats = getRaceStats(4152522)
+    import sys
+    args = sys.argv[1:]
+    if len(args) > 0:
+        zid = args[0]
+    else:
+        from .RiderStats import getRiderStats
+        rs = getRiderStats()
+        races = rs.races()
+        zid = races[0].zid
+    stats = getRaceStats(zid)
     print("Categories: {}".format(stats.categories()))
     myCat = stats.myCategory()
     print("My Category: {}".format(myCat))
